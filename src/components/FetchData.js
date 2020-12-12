@@ -1,11 +1,21 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Remarkable } from 'remarkable';
 import './Cards.css';
 
 export default class FetchData extends React.Component {
-    state = {
-        loading: true,
-        response: [],
-    };
+    constructor(props){
+        super(props);
+        this.md = new Remarkable();
+        //this.handleCHange = this.handleCHange.bind(this);
+        this.state = {
+            loading: true,
+            response: [],
+            value: "Text here"
+        };
+    }
+
+ 
 
     async componentDidMount(){
         // get data
@@ -31,7 +41,7 @@ export default class FetchData extends React.Component {
                           this.state.response.map(((item, index) => 
                             <div className='card-component'>         
                                   <div className='title'>{item.data.title}</div>                    
-                                  <div className='message'>{item.data.selftext.substr(0,600)}</div>
+                                  <div className='message'><ReactMarkdown>{item.data.selftext.substr(0,600)}</ReactMarkdown></div>
                               </div>
                           ))
                       }
