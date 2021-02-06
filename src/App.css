@@ -50,4 +50,5 @@ body .App .inputGroup{
 
 a {
   color: #61dafb;
+  overflow-wrap: anywhere;
 }
