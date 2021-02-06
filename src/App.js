@@ -13,7 +13,7 @@ class App extends React.Component {
       </MetaTags>
       <header className="App-header">        
         <h1>Reactive Reading App v.1</h1>   
-        <p>✅Set cards amount ✅Set text length ✅No annoying images</p>     
+        <h2>✅Set cards amount ✅Set text length ✅No annoying images</h2>     
       </header> 
       <FetchData></FetchData> 
                 

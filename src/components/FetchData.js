@@ -9,70 +9,108 @@ export default class FetchData extends React.Component {
         this.md = new Remarkable();
         this.handleChange = this.handleChange.bind(this);
         this.handleChange2 = this.handleChange2.bind(this);
+        this.handleChange3 = this.handleChange3.bind(this);
         this.state = {
+            subreddit: 'webdev',
             loading: true,
             response: [],
-            cardsToShow: "5",
-            cardTextLength: 600
+            responseShown: [],
+            cardsToShow: "10",
+            cardTextLength: 800
         };
     }
 
-    handleChange(e) {        
-        this.setState({ loading: true, cardsToShow: e.target.value });
+    handleChange(e) {
+        this.setState({             
+            cardsToShow: e.target.value,
+            responseShown: this.state.response.slice(0, e.target.value)
+        });
+        console.log(this.state.response);
+        console.log(this.state.responseShown);
     } 
 
     handleChange2(e) {        
-        this.setState({ cardTextLength: e.target.value });
+        this.setState({ 
+            cardTextLength: e.target.value 
+        });
+    } 
+
+    handleChange3(e) {
+        console.log("HC3 - " + e.target.value);
+        this.setState({             
+            subreddit: e.target.value
+        }, () => {
+            this.myFunction();
+        });
     } 
 
     async componentDidMount(){
         this.myFunction();        
     }
 
-    async componentDidUpdate(){
-        this.myFunction();
-    }
-
     async myFunction(){
+        console.log("1 - " + this.state.subreddit);
         // get data
-        const url = 'https://www.reddit.com/r/webdev.json';
+        const url = 'https://www.reddit.com/r/'+this.state.subreddit+'/.json?limit=50';
         const response = await fetch(url);
         const data = await response.json();
 
         // set data
-        const dataArr = data.data.children;
-        //this.setState({ response: dataArr });
-        this.setState({ response: dataArr.slice(0,this.state.cardsToShow) });
-        this.setState({loading: false});
+        let dataArr = [];
+        try{
+            dataArr = data.data.children;
+            console.log("2");
+        } catch(e){
+            console.log("Data could not be parsed.");            
+        }
 
-        // log data
-        // console.log(JSON.stringify(this.state.response[0].data.title));
-        // console.log(JSON.stringify(this.state.response[2].data));        
-        // console.log(this.state.response.length);
+        this.setState({
+            response: dataArr,
+            responseShown: dataArr.slice(0,this.state.cardsToShow)
+        });
+        console.log(this.state.response);
+        console.log(this.state.responseShown);
+
+        this.setState({
+            loading: false
+        });        
+
     }
 
     render() {
         return    <div>
-                        <div className="inputGroup">                        
-                            <label>Cards:</label>
-                            <input
-                                type="number"
-                                id="markdown-content"
-                                onChange={this.handleChange}
-                                defaultValue={this.state.cardsToShow}
-                            />  
-                            <label>Length:</label>
-                            <input
-                                type="number"
-                                id="markdown-content"
-                                onChange={this.handleChange2}
-                                defaultValue={this.state.cardTextLength}
-                            />
-                            <label>{ this.state.loading ? 'Loading...' : ''}</label>
+                        <div className="inputGroup">
+                            <div className="group">
+                                <label>Subreddit:</label>
+                                <input
+                                    type="text"
+                                    id="markdown-content"
+                                    onChange={this.handleChange3}
+                                    defaultValue={this.state.subreddit}
+                                />
+                            </div>
+                            <div className="group">                          
+                                <label>Cards:</label>
+                                <input
+                                    type="number"
+                                    id="markdown-content"
+                                    onChange={this.handleChange}
+                                    defaultValue={this.state.cardsToShow}
+                                />
+                            </div>
+                             <div className="group">  
+                                <label>Length:</label>
+                                <input
+                                    type="number"
+                                    id="markdown-content"
+                                    onChange={this.handleChange2}
+                                    defaultValue={this.state.cardTextLength}
+                                />                               
+                            </div>
                         </div>                                             
-
+                        { this.state.loading ? 'Loading...' : ''}
                         {
-                            this.state.response.map(((item, index) => 
+                            this.state.responseShown.map(((item, index) => 
                             <div className='card-component'>         
                                     <div className='title'>{item.data.title}</div>                    
                                     <div className='message'> 
