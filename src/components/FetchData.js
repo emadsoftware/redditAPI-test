@@ -2,6 +2,7 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Remarkable } from 'remarkable';
 import './Cards.css';
+var Filter = require('bad-words');
 
 export default class FetchData extends React.Component {
     constructor(props){
@@ -18,6 +19,10 @@ export default class FetchData extends React.Component {
             cardsToShow: "10",
             cardTextLength: 800
         };
+        
+        this.filter = new Filter();
+        console.log(this.filter.clean("Don't be an ash0le"));
+
     }
 
     handleChange(e) {
@@ -107,14 +112,21 @@ export default class FetchData extends React.Component {
                                     defaultValue={this.state.cardTextLength}
                                 />                               
                             </div>
-                        </div>                                             
+                        </div>     
+                                                                
                         { this.state.loading ? 'Loading...' : ''}
                         {
+                            
                             this.state.responseShown.map(((item, index) => 
                             <div className='card-component'>         
                                     <div className='title'>{item.data.title}</div>                    
                                     <div className='message'> 
-                                        <ReactMarkdown>{item.data.selftext.substr(0,this.state.cardTextLength)}</ReactMarkdown>
+                                        <ReactMarkdown>
+                                            {
+                                                
+                                                (item.data.selftext.substr(0,this.state.cardTextLength))
+                                            }
+                                            </ReactMarkdown>
                                         { this.state.cardTextLength < item.data.selftext.length ? '...' : ''}
                                     </div>
                                 </div>
