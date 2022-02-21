@@ -21,7 +21,7 @@ export default class FetchData extends React.Component {
         };
         
         this.filter = new Filter();
-        console.log(this.filter.clean("Don't be an ash0le"));
+        console.log(this.filter.clean("Don't be __"));
 
     }
 
